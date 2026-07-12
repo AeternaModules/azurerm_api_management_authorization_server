@@ -21,7 +21,7 @@ resource "azurerm_api_management_authorization_server" "api_management_authoriza
   token_endpoint               = each.value.token_endpoint
 
   dynamic "token_body_parameter" {
-    for_each = each.value.token_body_parameter != null ? [each.value.token_body_parameter] : []
+    for_each = each.value.token_body_parameter != null ? each.value.token_body_parameter : []
     content {
       name  = token_body_parameter.value.name
       value = token_body_parameter.value.value

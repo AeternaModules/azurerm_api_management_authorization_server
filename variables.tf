@@ -45,59 +45,11 @@ EOT
     resource_owner_password      = optional(string)
     resource_owner_username      = optional(string)
     token_endpoint               = optional(string)
-    token_body_parameter = optional(object({
+    token_body_parameter = optional(list(object({
       name  = string
       value = string
-    }))
+    })))
   }))
-  validation {
-    condition = alltrue([
-      for k, v in var.api_management_authorization_servers : (
-        length(v.authorization_endpoint) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.api_management_authorization_servers : (
-        length(v.client_id) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.api_management_authorization_servers : (
-        length(v.client_registration_endpoint) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.api_management_authorization_servers : (
-        length(v.display_name) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.api_management_authorization_servers : (
-        v.token_body_parameter == null || (length(v.token_body_parameter.name) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.api_management_authorization_servers : (
-        v.token_body_parameter == null || (length(v.token_body_parameter.value) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
   # --- Unconfirmed validation candidates, derived from azurerm_api_management_authorization_server's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
@@ -120,13 +72,31 @@ EOT
   #   source:    [from resourcegroups.ValidateName: invalid when len(value) == 0]
   # path: resource_group_name
   #   source:    [from resourcegroups.ValidateName] !matched
+  # path: authorization_endpoint
+  #   condition: length(value) > 0
+  #   message:   must not be empty
   # path: authorization_methods[*]
   #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: client_id
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: client_registration_endpoint
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: display_name
+  #   condition: length(value) > 0
+  #   message:   must not be empty
   # path: grant_types[*]
   #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
   # path: bearer_token_sending_methods[*]
   #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
   # path: client_authentication_method[*]
   #   source:    validation.StringInSlice value list is not a literal []string - likely a generated PossibleValuesFor*() helper; resolve separately
+  # path: token_body_parameter.name
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: token_body_parameter.value
+  #   condition: length(value) > 0
+  #   message:   must not be empty
 }
 
