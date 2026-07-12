@@ -1,3 +1,7 @@
+output "api_management_authorization_servers_id" {
+  description = "Map of id values across all api_management_authorization_servers, keyed the same as var.api_management_authorization_servers"
+  value       = { for k, v in azurerm_api_management_authorization_server.api_management_authorization_servers : k => v.id }
+}
 output "api_management_authorization_servers_api_management_name" {
   description = "Map of api_management_name values across all api_management_authorization_servers, keyed the same as var.api_management_authorization_servers"
   value       = { for k, v in azurerm_api_management_authorization_server.api_management_authorization_servers : k => v.api_management_name }
